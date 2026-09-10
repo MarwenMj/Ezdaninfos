@@ -293,7 +293,10 @@
     <!-- JavaScript Logic -->
     <script>
         const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
-        const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSiyxjLRhBYPdzFxfJEnFAOZrViAPqkubSbNq82pP6OO6CdhGMlrYgnX5ltl3j4o-1oWfPmRiwP2m-W/pub?output=csv"; 
+        const RAW_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSiyxjLRhBYPdzFxfJEnFAOZrViAPqkubSbNq82pP6OO6CdhGMlrYgnX5ltl3j4o-1oWfPmRiwP2m-W/pub?output=csv"; 
+        
+        // استخدام بروكسي لتجاوز قيود حظر CORS للمتصفحات
+        const CSV_FETCH_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(RAW_SHEET_URL)}`;
 
         let userIpAddress = "Unknown";
         let responsesList = [];
@@ -385,20 +388,27 @@
             await fetchUserIp();
             loadStoredResponses();
             applyLanguage(currentLang);
+            loadCsvData();
+        });
 
-            if (SHEET_CSV_URL) {
-                Papa.parse(SHEET_CSV_URL, {
-                    download: true,
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: function(results) {
-                        bankData = results.data.filter(r => Object.values(r).some(v => v));
+        function loadCsvData() {
+            Papa.parse(CSV_FETCH_URL, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    if (results.data && results.data.length > 0) {
+                        bankData = results.data.filter(r => Object.values(r).some(v => v && String(v).trim() !== ""));
                         initBankDropdowns();
                         filterBankData();
                     }
-                });
-            }
-        });
+                },
+                error: function(err) {
+                    console.error("CSV Loading Error:", err);
+                    document.getElementById('bankTableBody').innerHTML = `<tr><td colspan="7" class="text-center py-6 text-red-500 font-semibold">تعذر تحميل البيانات من الشيت، يرجى التأكد من نشر شيت جوجل على الويب (Publish to web).</td></tr>`;
+                }
+            });
+        }
 
         async function fetchUserIp() {
             try {
@@ -599,18 +609,33 @@
             }
         }
 
+        function getColValue(row, possibleKeys) {
+            const keys = Object.keys(row);
+            for (let pk of possibleKeys) {
+                const found = keys.find(k => k.toLowerCase().trim().includes(pk.toLowerCase()));
+                if (found && row[found]) return row[found];
+            }
+            return null;
+        }
+
         function initBankDropdowns() {
             if (!bankData || bankData.length === 0) return;
-            const keys = Object.keys(bankData[0]);
-            
-            const zoneKey = keys.find(k => k.toLowerCase().includes('zone') || k.includes('منطقة') || k.includes('موقع')) || keys[0];
-            const catKey = keys.find(k => k.toLowerCase().includes('cat') || k.includes('فئة') || k.includes('نوع')) || keys[2] || keys[0];
 
-            const zones = [...new Set(bankData.map(r => r[zoneKey]).filter(Boolean))];
-            const categories = [...new Set(bankData.map(r => r[catKey]).filter(Boolean))];
+            const zones = new Set();
+            const categories = new Set();
+
+            bankData.forEach(row => {
+                const z = getColValue(row, ['zone', 'موقع', 'منطقة', 'location']);
+                const c = getColValue(row, ['cat', 'فئة', 'نوع', 'type', 'category']);
+                if (z) zones.add(z.trim());
+                if (c) categories.add(c.trim());
+            });
 
             const bankZoneSelect = document.getElementById('bankZoneSelect');
             const bankCategorySelect = document.getElementById('bankCategorySelect');
+
+            bankZoneSelect.innerHTML = `<option value="">${currentLang === 'ar' ? 'جميع المناطق' : 'All Zones'}</option>`;
+            bankCategorySelect.innerHTML = `<option value="">${currentLang === 'ar' ? 'جميع الفئات' : 'All Categories'}</option>`;
 
             zones.forEach(z => {
                 const opt = document.createElement('option');
@@ -629,25 +654,31 @@
 
         function filterBankData() {
             const searchVal = document.getElementById('bankSearchInput').value.toLowerCase().trim();
-            const zoneVal = document.getElementById('bankZoneSelect').value;
-            const catVal = document.getElementById('bankCategorySelect').value;
+            const zoneVal = document.getElementById('bankZoneSelect').value.toLowerCase().trim();
+            const catVal = document.getElementById('bankCategorySelect').value.toLowerCase().trim();
             const tbody = document.getElementById('bankTableBody');
 
             if (!bankData || bankData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400 italic">${translations[currentLang].bankPlaceholder}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400 italic font-semibold" id="bankPlaceholder">${translations[currentLang].bankPlaceholder}</td></tr>`;
                 return;
             }
 
             const filtered = bankData.filter(row => {
-                const matchesSearch = Object.values(row).some(v => String(v).toLowerCase().includes(searchVal));
-                const matchesZone = !zoneVal || Object.values(row).includes(zoneVal);
-                const matchesCat = !catVal || Object.values(row).includes(catVal);
+                const rowStr = Object.values(row).join(' ').toLowerCase();
+                const matchesSearch = !searchVal || rowStr.includes(searchVal);
+                
+                const zVal = (getColValue(row, ['zone', 'موقع', 'منطقة', 'location']) || '').toLowerCase();
+                const matchesZone = !zoneVal || zVal.includes(zoneVal);
+
+                const cVal = (getColValue(row, ['cat', 'فئة', 'نوع', 'type', 'category']) || '').toLowerCase();
+                const matchesCat = !catVal || cVal.includes(catVal);
+
                 return matchesSearch && matchesZone && matchesCat;
             });
 
             tbody.innerHTML = '';
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400 italic">${translations[currentLang].bankPlaceholder}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-slate-400 italic font-semibold">${translations[currentLang].bankPlaceholder}</td></tr>`;
                 return;
             }
 
@@ -656,13 +687,21 @@
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
                 
                 const values = Object.values(row);
+                
+                const zone = getColValue(row, ['zone', 'موقع', 'منطقة', 'location']) || values[0] || '-';
+                const village = getColValue(row, ['village', 'قرية', 'مجمع', 'compound']) || values[1] || '-';
+                const cat = getColValue(row, ['cat', 'فئة', 'category']) || values[2] || '-';
+                const unitType = getColValue(row, ['unit', 'نوع الوحدة', 'type']) || values[3] || '-';
+                const furnished = getColValue(row, ['furnish', 'فرش', 'كهرماء', 'kahramaa']) || values[4] || '-';
+                const price = getColValue(row, ['price', 'سعر', 'السعر المعتمد']) || values[5] || '-';
+
                 tr.innerHTML = `
-                    <td class="p-3 font-semibold text-slate-800">${values[0] || '-'}</td>
-                    <td class="p-3 text-slate-600">${values[1] || '-'}</td>
-                    <td class="p-3 text-slate-600">${values[2] || '-'}</td>
-                    <td class="p-3 text-slate-600">${values[3] || '-'}</td>
-                    <td class="p-3 text-slate-600">${values[4] || '-'}</td>
-                    <td class="p-3 font-bold text-ezdan-red">${values[5] || '-'}</td>
+                    <td class="p-3 font-semibold text-slate-800">${zone}</td>
+                    <td class="p-3 text-slate-600">${village}</td>
+                    <td class="p-3 text-slate-600">${cat}</td>
+                    <td class="p-3 text-slate-600">${unitType}</td>
+                    <td class="p-3 text-slate-600">${furnished}</td>
+                    <td class="p-3 font-bold text-ezdan-red">${price}</td>
                     <td class="p-3 text-center">
                         <span class="inline-block px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">متوفر</span>
                     </td>
