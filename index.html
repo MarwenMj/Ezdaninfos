@@ -77,17 +77,18 @@
         <!-- Navigation Tabs -->
         <div class="flex gap-2 bg-white rounded-xl p-1.5 shadow-md border border-slate-200">
             <button type="button" id="tabFormBtn" onclick="switchTab('form')"
-                class="flex-1 py-3 rounded-lg text-sm font-bold transition text-slate-600 hover:bg-slate-100">
+                class="flex-1 py-3 rounded-lg text-sm font-bold transition bg-ezdan-red text-white shadow">
                 تسجيل بيانات العميل
             </button>
             <button type="button" id="tabBankBtn" onclick="switchTab('bank')"
-                class="flex-1 py-3 rounded-lg text-sm font-bold transition bg-ezdan-red text-white shadow">
+                class="flex-1 py-3 rounded-lg text-sm font-bold transition text-slate-600 hover:bg-slate-100">
                 بنك المعلومات للوحدات
             </button>
         </div>
 
         <!-- FORM PANEL -->
-        <div id="formPanel" class="hidden space-y-6">
+        <div id="formPanel" class="space-y-6">
+            <!-- Form Card -->
             <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-slate-200 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-2 h-full bg-ezdan-red"></div>
                 
@@ -196,10 +197,43 @@
                     </button>
                 </form>
             </div>
+
+            <!-- SUBMISSIONS TABLE PANEL (المكون الُمرتجع) -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-slate-200">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800" id="submissionsHeading">الطلبات المسجلة مؤخراً</h3>
+                        <p class="text-xs text-slate-500" id="submissionsSubheading">قائمة بالطلبات التي تم إدخالها خلال الجلسة الحالية</p>
+                    </div>
+                    <span id="submissionCountBadge" class="bg-ezdan-red/10 text-ezdan-red text-xs px-3 py-1 rounded-full font-bold">0 طلبات</span>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="w-full text-sm text-right">
+                        <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 text-xs">
+                            <tr>
+                                <th class="p-3">الوقت</th>
+                                <th class="p-3">إسم العميل</th>
+                                <th class="p-3">رقم الهاتف</th>
+                                <th class="p-3">نوع الطلب</th>
+                                <th class="p-3">المنطقة</th>
+                                <th class="p-3">عدد الوحدات</th>
+                                <th class="p-3">الإعلان</th>
+                                <th class="p-3">ملاحظات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissionsTableBody" class="divide-y divide-slate-100">
+                            <tr id="emptySubmissionsRow">
+                                <td colspan="8" class="text-center py-6 text-slate-400 italic">لم يتم تسجيل أي طلبات بعد في هذه الجلسة.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <!-- INFO BANK PANEL -->
-        <div id="bankPanel" class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-slate-200">
+        <div id="bankPanel" class="hidden bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-slate-200">
             <div class="mb-6 border-b border-slate-100 pb-4 flex justify-between items-center">
                 <div>
                     <h2 id="bankHeading" class="text-xl font-bold text-slate-800">بنك المعلومات التفاعلي</h2>
@@ -248,16 +282,28 @@
     </div>
 
     <script>
-        // المعرّف الخاص بالشيت الخاص بك تم استخراجه وحقنه بالرابط
         const SHEET_ID = "1j-z-6YIPP3WYJV0Wd-XJvERkiMoMJ18QuMQWLjAG8D0";
         const DIRECT_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
         
         let bankData = [];
         let headersList = [];
+        let submissionsList = [];
 
         window.addEventListener('DOMContentLoaded', () => {
             fetchExcelData();
+            fetchUserIp();
         });
+
+        function fetchUserIp() {
+            fetch('https://api.ipify.org?format=json')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('userIpBadge').textContent = data.ip;
+                })
+                .catch(() => {
+                    document.getElementById('userIpBadge').textContent = 'غير معروف';
+                });
+        }
 
         function fetchExcelData() {
             Papa.parse(DIRECT_CSV_URL, {
@@ -274,7 +320,7 @@
                     } else {
                         document.getElementById('bankPlaceholder').innerHTML = `
                             <span class="text-amber-600 block mb-1 font-bold">⚠️ تم الاتصال بالشيت لكن لم تُقرأ أية بيانات.</span>
-                            <span class="text-xs text-slate-500">تأكد من فتح الملف ومشاركة > النشر على الويب (Publish to web) وتحديد CSV.</span>
+                            <span class="text-xs text-slate-500">تأكد من فتح الملف ومشاركة > النشر على الويب (Publish to web).</span>
                         `;
                     }
                 },
@@ -282,10 +328,82 @@
                     console.error("Error loading CSV:", err);
                     document.getElementById('bankPlaceholder').innerHTML = `
                         <span class="text-red-600 block mb-1 font-bold">❌ فشل تحميل الملف</span>
-                        <span class="text-xs text-slate-500">يرجى الاتصال بالشيت بعد النشر على الويب (Publish to web).</span>
+                        <span class="text-xs text-slate-500">يرجى التأكد من إعدادات النشر على الويب.</span>
                     `;
                 }
             });
+        }
+
+        function handleCategoryChange() {
+            const cat = document.getElementById('category').value;
+            const zoneAsterisk = document.getElementById('zoneAsterisk');
+            const unitsAsterisk = document.getElementById('unitsAsterisk');
+            const originAsterisk = document.getElementById('originAsterisk');
+
+            if (cat === 'Inquiry') {
+                zoneAsterisk.classList.remove('hidden');
+                unitsAsterisk.classList.remove('hidden');
+                originAsterisk.classList.remove('hidden');
+            } else {
+                zoneAsterisk.classList.add('hidden');
+                unitsAsterisk.classList.add('hidden');
+                originAsterisk.classList.add('hidden');
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const record = {
+                time: new Date().toLocaleTimeString('ar-QA', { hour: '2-digit', minute: '2-digit' }),
+                customerName: document.getElementById('customerName').value,
+                mobileNumber: document.getElementById('mobileNumber').value,
+                category: document.getElementById('category').value,
+                zone: document.getElementById('zone').value || '-',
+                numOfUnits: document.getElementById('numOfUnits').value || '-',
+                salesOrigin: document.getElementById('salesOrigin').value || '-',
+                notes: document.getElementById('notes').value || '-'
+            };
+
+            submissionsList.unshift(record);
+            renderSubmissions();
+
+            // Reset Form
+            document.getElementById('agentForm').reset();
+            handleCategoryChange();
+        }
+
+        function renderSubmissions() {
+            const tbody = document.getElementById('submissionsTableBody');
+            const badge = document.getElementById('submissionCountBadge');
+            
+            badge.textContent = `${submissionsList.length} طلبات`;
+
+            if (submissionsList.length === 0) {
+                tbody.innerHTML = `
+                    <tr id="emptySubmissionsRow">
+                        <td colspan="8" class="text-center py-6 text-slate-400 italic">لم يتم تسجيل أي طلبات بعد في هذه الجلسة.</td>
+                    </tr>`;
+                return;
+            }
+
+            let html = '';
+            submissionsList.forEach(item => {
+                html += `
+                    <tr class="hover:bg-slate-50 transition border-b border-slate-100 text-xs md:text-sm">
+                        <td class="p-3 text-slate-500 font-mono">${item.time}</td>
+                        <td class="p-3 font-bold text-slate-800">${item.customerName}</td>
+                        <td class="p-3 text-slate-700 font-mono" dir="ltr">${item.mobileNumber}</td>
+                        <td class="p-3"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-semibold">${item.category}</span></td>
+                        <td class="p-3 text-slate-600">${item.zone}</td>
+                        <td class="p-3 text-slate-600 font-semibold">${item.numOfUnits}</td>
+                        <td class="p-3 text-slate-600">${item.salesOrigin}</td>
+                        <td class="p-3 text-slate-500 max-w-xs truncate">${item.notes}</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
         }
 
         function renderTableHeader() {
