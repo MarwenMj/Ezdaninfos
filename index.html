@@ -41,7 +41,8 @@
 </head>
 <body class="ezdan-watermark min-h-screen py-8 px-4 flex justify-center text-slate-800">
 
-    <div class="w-full max-w-5xl space-y-6">
+    <!-- تم توسيع العرض من max-w-5xl إلى max-w-7xl لملء الفراغات الجانبية -->
+    <div class="w-full max-w-7xl space-y-6">
         
         <!-- Header Banner -->
         <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-4 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -57,12 +58,17 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-ezdan-dark">إزدان العقارية <span class="text-ezdan-red text-sm font-semibold">| Ezdan Real Estate</span></h1>
-                    <p class="text-xs text-ezdan-gray">نظام خدمة العملاء ومتابعة جودة الاتصالات وبنك الوحدات</p>
+                    <h1 id="mainTitle" class="text-xl font-bold text-ezdan-dark">إزدان العقارية <span class="text-ezdan-red text-sm font-semibold">| Ezdan Real Estate</span></h1>
+                    <p id="mainSubtitle" class="text-xs text-ezdan-gray">نظام خدمة العملاء ومتابعة جودة الاتصالات وبنك الوحدات</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
+                <!-- زر تغيير اللغة -->
+                <button type="button" onclick="toggleLanguage()" class="flex items-center gap-1.5 bg-ezdan-lightbg text-ezdan-red border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition shadow-sm">
+                    🌐 <span id="langBtnText">English</span>
+                </button>
+
                 <div class="flex items-center space-x-2 space-x-reverse text-xs font-semibold text-slate-600 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
                     <span id="ipLabel">IP الجهاز:</span>
                     <span id="userIpBadge" class="text-ezdan-red font-mono font-bold">جاري الكشف...</span>
@@ -192,24 +198,24 @@
             <!-- Submitted Requests Table Section -->
             <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-slate-200">
                 <div class="mb-4 border-b border-slate-100 pb-3 flex justify-between items-center">
-                    <h3 class="font-bold text-slate-800 text-lg">الطلبات المسجلة من جهازك (IP)</h3>
+                    <h3 id="submittedTableTitle" class="font-bold text-slate-800 text-lg">الطلبات المسجلة من جهازك (IP)</h3>
                     <span id="requestCountBadge" class="bg-ezdan-lightbg text-ezdan-red font-bold text-xs px-3 py-1 rounded-full">0 طلبات</span>
                 </div>
                 <div class="overflow-x-auto rounded-xl border border-slate-200">
-                    <table class="w-full text-sm text-right">
+                    <table class="w-full text-sm text-right" id="submittedRequestsTableElement">
                         <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-xs">
                             <tr>
-                                <th class="p-3">اسم العميل</th>
-                                <th class="p-3">رقم الهاتف</th>
-                                <th class="p-3">نوع الطلب</th>
-                                <th class="p-3">المنطقة</th>
-                                <th class="p-3">IP الجهاز</th>
-                                <th class="p-3 text-center">الإجراء</th>
+                                <th class="p-3" id="thSubName">اسم العميل</th>
+                                <th class="p-3" id="thSubMobile">رقم الهاتف</th>
+                                <th class="p-3" id="thSubCategory">نوع الطلب</th>
+                                <th class="p-3" id="thSubZone">المنطقة</th>
+                                <th class="p-3" id="thSubIp">IP الجهاز</th>
+                                <th class="p-3 text-center" id="thSubAction">الإجراء</th>
                             </tr>
                         </thead>
                         <tbody id="submittedRequestsBody" class="divide-y divide-slate-100">
                             <tr>
-                                <td colspan="6" class="text-center py-6 text-slate-400 italic">لا توجد طلبات مسجلة حتى الآن.</td>
+                                <td colspan="6" class="text-center py-6 text-slate-400 italic" id="subEmptyText">لا توجد طلبات مسجلة حتى الآن.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -219,14 +225,14 @@
 
         <!-- INFO BANK PANEL -->
         <div id="bankPanel" class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-slate-200 hidden">
-            <div class="mb-6 border-b border-slate-100 pb-4 flex justify-between items-center">
+            <div class="mb-6 border-b border-slate-100 pb-4 flex justify-between items-center flex-wrap gap-4">
                 <div>
                     <h2 id="bankHeading" class="text-xl font-bold text-slate-800">بنك المعلومات التفاعلي</h2>
                     <p id="bankSubheading" class="text-slate-500 text-xs mt-1">البحث السريع واستعراض تفاصيل أسعار وحالة توفر مجمعات إزدان</p>
                 </div>
                 <span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-bold flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                    ربط مباشر بالأكسيل
+                    <span id="excelLiveBadge">ربط مباشر بالأكسيل</span>
                 </span>
             </div>
 
@@ -238,13 +244,13 @@
                 <div>
                     <label for="bankZoneSelect" class="block text-sm font-semibold text-slate-700 mb-1" id="lblBankZone">المنطقة / الموقع:</label>
                     <select id="bankZoneSelect" onchange="filterBankData()" class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-ezdan-red outline-none text-sm bg-white">
-                        <option value="">جميع المناطق</option>
+                        <option value="" id="optAllZones">جميع المناطق</option>
                     </select>
                 </div>
                 <div>
                     <label for="bankCategorySelect" class="block text-sm font-semibold text-slate-700 mb-1" id="lblBankCategory">الفئة / نوع الوحدة:</label>
                     <select id="bankCategorySelect" onchange="filterBankData()" class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-ezdan-red outline-none text-sm bg-white">
-                        <option value="">جميع الفئات</option>
+                        <option value="" id="optAllCategories">جميع الفئات</option>
                     </select>
                 </div>
             </div>
@@ -273,6 +279,103 @@
         let bankData = [];
         let headersList = [];
         let currentUserIP = "جاري الكشف...";
+        let currentLang = 'ar'; // اللغة الافتراضية
+
+        // قاموس الترجمة
+        const translations = {
+            ar: {
+                htmlLang: "ar",
+                dir: "rtl",
+                docTitle: "إزدان العقارية | نظام تسجيل البيانات وبنك المعلومات",
+                mainTitleText: 'إزدان العقارية <span class="text-ezdan-red text-sm font-semibold">| Ezdan Real Estate</span>',
+                mainSubtitleText: "نظام خدمة العملاء ومتابعة جودة الاتصالات وبنك الوحدات",
+                langBtnText: "English",
+                ipLabelText: "IP الجهاز:",
+                tabForm: "تسجيل بيانات العميل",
+                tabBank: "بنك المعلومات للوحدات",
+                formHeading: "تسجيل بيانات العميل",
+                formSubheading: "يرجى تعبئة الحقول المطلوبة وتسجيل الطلب في السجل",
+                lblCustomerName: "إسم العميل",
+                customerNamePlaceholder: "أدخل اسم العميل",
+                lblMobileNumber: "رقم الهاتف",
+                lblCategory: "نوع الطلب",
+                optSelectCategory: "اختر نوع الطلب...",
+                lblZone: "المنطقة",
+                optSelectZone: "اختر المنطقة...",
+                lblNumOfUnits: "عدد الوحدات",
+                lblSalesOrigin: "الإعلان",
+                optSelectOrigin: "اختر مصدر الإعلان...",
+                lblNotes: "ملاحظة",
+                notesPlaceholder: "أضف أي ملاحظات إضافية هنا...",
+                btnText: "إرسال البيانات (Submit)",
+                submittedTableTitle: "الطلبات المسجلة من جهازك (IP)",
+                thSubName: "اسم العميل",
+                thSubMobile: "رقم الهاتف",
+                thSubCategory: "نوع الطلب",
+                thSubZone: "المنطقة",
+                thSubIp: "IP الجهاز",
+                thSubAction: "الإجراء",
+                subEmptyText: "لا توجد طلبات مسجلة حتى الآن.",
+                deleteBtn: "حذف",
+                bankHeading: "بنك المعلومات التفاعلي",
+                bankSubheading: "البحث السريع واستعراض تفاصيل أسعار وحالة توفر مجمعات إزدان",
+                excelLiveBadge: "ربط مباشر بالأكسيل",
+                lblBankSearch: "البحث السريع:",
+                searchPlaceholder: "ابحث بالمنطقة، القرية، أو السعر...",
+                lblBankZone: "المنطقة / الموقع:",
+                optAllZones: "جميع المناطق",
+                lblBankCategory: "الفئة / نوع الوحدة:",
+                optAllCategories: "جميع الفئات",
+                bankPlaceholder: "جاري الاتصال بالأكسيل وجلب البيانات...",
+                successMsg: "تم تسجيل الطلب بنجاح ولن يختفي عند تحديث الصفحة!"
+            },
+            en: {
+                htmlLang: "en",
+                dir: "ltr",
+                docTitle: "Ezdan Real Estate | Data Registration & Info Bank",
+                mainTitleText: 'Ezdan Real Estate <span class="text-ezdan-red text-sm font-semibold">| إزدان العقارية</span>',
+                mainSubtitleText: "Customer Service, Call Quality Monitoring & Units Info Bank",
+                langBtnText: "العربية",
+                ipLabelText: "Device IP:",
+                tabForm: "Customer Data Registration",
+                tabBank: "Units Information Bank",
+                formHeading: "Customer Data Registration",
+                formSubheading: "Please fill in the required fields and submit the request to the ledger",
+                lblCustomerName: "Customer Name",
+                customerNamePlaceholder: "Enter customer name",
+                lblMobileNumber: "Mobile Number",
+                lblCategory: "Request Type",
+                optSelectCategory: "Select request type...",
+                lblZone: "Zone",
+                optSelectZone: "Select zone...",
+                lblNumOfUnits: "Number of Units",
+                lblSalesOrigin: "Sales Origin",
+                optSelectOrigin: "Select ad source...",
+                lblNotes: "Notes",
+                notesPlaceholder: "Add any extra notes here...",
+                btnText: "Submit Data",
+                submittedTableTitle: "Submitted Requests from Your Device (IP)",
+                thSubName: "Customer Name",
+                thSubMobile: "Mobile Number",
+                thSubCategory: "Request Type",
+                thSubZone: "Zone",
+                thSubIp: "Device IP",
+                thSubAction: "Action",
+                subEmptyText: "No requests recorded yet.",
+                deleteBtn: "Delete",
+                bankHeading: "Interactive Information Bank",
+                bankSubheading: "Quick search and details on Ezdan complexes prices and availability",
+                excelLiveBadge: "Live Excel Connection",
+                lblBankSearch: "Quick Search:",
+                searchPlaceholder: "Search by zone, village, or price...",
+                lblBankZone: "Zone / Location:",
+                optAllZones: "All Zones",
+                lblBankCategory: "Category / Unit Type:",
+                optAllCategories: "All Categories",
+                bankPlaceholder: "Connecting to Excel and fetching data...",
+                successMsg: "Request successfully recorded and saved!"
+            }
+        };
 
         window.addEventListener('DOMContentLoaded', () => {
             fetchUserIP();
@@ -280,7 +383,65 @@
             loadSubmittedRequests();
         });
 
-        // جلب الـ IP الحقيقي للمستخدم
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            applyLanguage();
+        }
+
+        function applyLanguage() {
+            const t = translations[currentLang];
+            const htmlTag = document.getElementById('htmlTag');
+            htmlTag.setAttribute('lang', t.htmlLang);
+            htmlTag.setAttribute('dir', t.dir);
+
+            document.getElementById('docTitle').textContent = t.docTitle;
+            document.getElementById('mainTitle').innerHTML = t.mainTitleText;
+            document.getElementById('mainSubtitle').textContent = t.mainSubtitleText;
+            document.getElementById('langBtnText').textContent = t.langBtnText;
+            document.getElementById('ipLabel').textContent = t.ipLabelText;
+
+            document.getElementById('tabFormBtn').textContent = t.tabForm;
+            document.getElementById('tabBankBtn').textContent = t.tabBank;
+
+            document.getElementById('formHeading').textContent = t.formHeading;
+            document.getElementById('formSubheading').textContent = t.formSubheading;
+            document.getElementById('lblCustomerName').textContent = t.lblCustomerName;
+            document.getElementById('customerName').placeholder = t.customerNamePlaceholder;
+            document.getElementById('lblMobileNumber').textContent = t.lblMobileNumber;
+            document.getElementById('lblCategory').textContent = t.lblCategory;
+            document.getElementById('optSelectCategory').textContent = t.optSelectCategory;
+
+            document.getElementById('lblZone').textContent = t.lblZone;
+            document.getElementById('optSelectZone').textContent = t.optSelectZone;
+            document.getElementById('lblNumOfUnits').textContent = t.lblNumOfUnits;
+            document.getElementById('lblSalesOrigin').textContent = t.lblSalesOrigin;
+            document.getElementById('optSelectOrigin').textContent = t.optSelectOrigin;
+            document.getElementById('lblNotes').textContent = t.lblNotes;
+            document.getElementById('notes').placeholder = t.notesPlaceholder;
+            document.getElementById('btnText').textContent = t.btnText;
+
+            document.getElementById('submittedTableTitle').textContent = t.submittedTableTitle;
+            document.getElementById('thSubName').textContent = t.thSubName;
+            document.getElementById('thSubMobile').textContent = t.thSubMobile;
+            document.getElementById('thSubCategory').textContent = t.thSubCategory;
+            document.getElementById('thSubZone').textContent = t.thSubZone;
+            document.getElementById('thSubIp').textContent = t.thSubIp;
+            document.getElementById('thSubAction').textContent = t.thSubAction;
+
+            document.getElementById('bankHeading').textContent = t.bankHeading;
+            document.getElementById('bankSubheading').textContent = t.bankSubheading;
+            document.getElementById('excelLiveBadge').textContent = t.excelLiveBadge;
+            document.getElementById('lblBankSearch').textContent = t.lblBankSearch;
+            document.getElementById('bankSearchInput').placeholder = t.searchPlaceholder;
+            document.getElementById('lblBankZone').textContent = t.lblBankZone;
+            document.getElementById('optAllZones').textContent = t.optAllZones;
+            document.getElementById('lblBankCategory').textContent = t.lblBankCategory;
+            document.getElementById('optAllCategories').textContent = t.optAllCategories;
+
+            loadSubmittedRequests();
+            if(bankData.length > 0) filterBankData();
+        }
+
         function fetchUserIP() {
             fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
@@ -290,12 +451,11 @@
                 })
                 .catch(error => {
                     console.error('Error fetching IP:', error);
-                    currentUserIP = "192.168.1.50"; // قيمة افتراضية في حال الفشل
+                    currentUserIP = "192.168.1.50";
                     document.getElementById('userIpBadge').textContent = currentUserIP;
                 });
         }
 
-        // التعامل مع إرسال الطلب وحفظه في الـ localStorage
         function handleSubmit(event) {
             event.preventDefault();
 
@@ -312,26 +472,23 @@
             };
 
             let requests = JSON.parse(localStorage.getItem('ezdan_requests')) || [];
-            requests.unshift(newRequest); // إضافة الطلب الجديد في المقدمة
+            requests.unshift(newRequest);
             localStorage.setItem('ezdan_requests', JSON.stringify(requests));
 
-            // إعادة تعيين النموذج
             document.getElementById('agentForm').reset();
-            
-            // تحديث الجدول المعروض
             loadSubmittedRequests();
-            alert('تم تسجيل الطلب بنجاح ولن يختفي عند تحديث الصفحة!');
+            alert(translations[currentLang].successMsg);
         }
 
-        // تحميل وعرض الطلبات المسجلة أسفل النموذج
         function loadSubmittedRequests() {
             const tbody = document.getElementById('submittedRequestsBody');
             const requests = JSON.parse(localStorage.getItem('ezdan_requests')) || [];
+            const t = translations[currentLang];
             
-            document.getElementById('requestCountBadge').textContent = `${requests.length} طلبات`;
+            document.getElementById('requestCountBadge').textContent = `${requests.length} ${currentLang === 'ar' ? 'طلبات' : 'requests'}`;
 
             if (requests.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400 italic">لا توجد طلبات مسجلة حتى الآن.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400 italic">${t.subEmptyText}</td></tr>`;
                 return;
             }
 
@@ -345,7 +502,7 @@
                         <td class="p-3 text-slate-600">${req.zone}</td>
                         <td class="p-3 font-mono text-ezdan-red font-bold text-xs">${req.ip}</td>
                         <td class="p-3 text-center">
-                            <button onclick="deleteRequest(${req.id})" class="text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 bg-red-50 rounded hover:bg-red-100 transition">حذف</button>
+                            <button onclick="deleteRequest(${req.id})" class="text-red-500 hover:text-red-700 text-xs font-bold px-2 py-1 bg-red-50 rounded hover:bg-red-100 transition">${t.deleteBtn}</button>
                         </td>
                     </tr>
                 `;
@@ -353,7 +510,6 @@
             tbody.innerHTML = html;
         }
 
-        // حذف طلب محدد
         function deleteRequest(id) {
             let requests = JSON.parse(localStorage.getItem('ezdan_requests')) || [];
             requests = requests.filter(r => r.id !== id);
@@ -361,7 +517,6 @@
             loadSubmittedRequests();
         }
 
-        // الدوال الخاصة ببنك المعلومات
         function fetchExcelData() {
             Papa.parse(DIRECT_CSV_URL, {
                 download: true,
@@ -453,23 +608,40 @@
 
             tbody.innerHTML = '';
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${headersList.length || 7}" class="text-center py-6 text-slate-400 italic">لا توجد نتائج مطابقة للبحث.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${headersList.length || 7}" class="text-center py-6 text-slate-400 italic">${currentLang === 'ar' ? 'لا توجد نتائج مطابقة للبحث.' : 'No matching results found.'}</td></tr>`;
                 return;
             }
 
             filtered.forEach(row => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
+                
+                // فحص حالة التوفر لمعرفة هل الوحدة متاحة أم لا (افتراض وجود عمود Status أو الحالة أو ما يشير لعدم التوفر)
+                let rowStrAll = Object.values(row).join(' ').toLowerCase();
+                let isAvailable = true;
+                if (rowStrAll.includes('غير متاحة') || rowStrAll.includes('unavailable') || rowStrAll.includes('غير متاح') || rowStrAll.includes('booked')) {
+                    isAvailable = false;
+                }
+
+                // تطبيق لون السطر بالكامل أحمر خفيف ومميز للوحدات غير المتاحة
+                if (!isAvailable) {
+                    tr.className = "bg-red-50 hover:bg-red-100 transition border-b border-red-200 text-red-900";
+                } else {
+                    tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
+                }
                 
                 let rowHtml = '';
                 headersList.forEach((header, idx) => {
                     const val = row[header] || '-';
+                    const hLower = header.toLowerCase();
+
                     if (idx === 0) {
-                        rowHtml += `<td class="p-3 font-bold text-slate-800">${val}</td>`;
-                    } else if (header.toLowerCase().includes('price') || header.toLowerCase().includes('سعر')) {
-                        rowHtml += `<td class="p-3 font-bold text-ezdan-red">${val}</td>`;
+                        rowHtml += `<td class="p-3 font-bold ${isAvailable ? 'text-slate-800' : 'text-red-900'}">${val}</td>`;
+                    } else if (hLower.includes('price') || hLower.includes('سعر')) {
+                        // سعر الإيجار باللون الأخضر للوحدات المتاحة، وإذا كانت غير متاحة يتبع تنسيق السطر أو أحمر
+                        const priceColor = isAvailable ? 'text-emerald-600 font-extrabold text-base' : 'text-red-600 font-extrabold text-base';
+                        rowHtml += `<td class="p-3 ${priceColor}">${val}</td>`;
                     } else {
-                        rowHtml += `<td class="p-3 text-slate-600">${val}</td>`;
+                        rowHtml += `<td class="p-3 ${isAvailable ? 'text-slate-600' : 'text-red-800'}">${val}</td>`;
                     }
                 });
 
