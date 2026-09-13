@@ -39,9 +39,9 @@
         }
     </style>
 </head>
-<body class="ezdan-watermark min-h-screen py-8 px-4 flex justify-center text-slate-800">
+<body class="ezdan-watermark min-h-screen py-4 px-2 sm:px-4 md:px-6 flex justify-center text-slate-800">
 
-    <div class="w-full max-w-7xl space-y-6">
+    <div class="w-full max-w-[99%] xl:max-w-[98%] space-y-6">
         
         <!-- Header Banner -->
         <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-4 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -57,15 +57,15 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 id="mainTitle" class="text-xl font-bold text-ezdan-dark">إزدان العقارية <span class="text-ezdan-red text-sm font-semibold">| Ezdan Real Estate</span></h1>
-                    <p id="mainSubtitle" class="text-xs text-ezdan-gray">نظام خدمة العملاء ومتابعة جودة الاتصالات وبنك الوحدات</p>
+                    <h1 class="text-xl font-bold text-ezdan-dark" id="mainHeaderTitle">إزدان العقارية <span class="text-ezdan-red text-sm font-semibold">| Ezdan Real Estate</span></h1>
+                    <p class="text-xs text-ezdan-gray" id="mainHeaderSub">نظام خدمة العملاء ومتابعة جودة الاتصالات وبنك الوحدات</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
-                <!-- زر تغيير اللغة -->
-                <button type="button" onclick="toggleLanguage()" class="flex items-center gap-1.5 bg-ezdan-lightbg text-ezdan-red border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition shadow-sm">
-                    🌐 <span id="langBtnText">English</span>
+                <!-- Language Switcher Button -->
+                <button type="button" onclick="toggleLanguage()" class="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold transition">
+                    🌐 <span id="langButtonText">English</span>
                 </button>
 
                 <div class="flex items-center space-x-2 space-x-reverse text-xs font-semibold text-slate-600 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
@@ -197,24 +197,24 @@
             <!-- Submitted Requests Table Section -->
             <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-slate-200">
                 <div class="mb-4 border-b border-slate-100 pb-3 flex justify-between items-center">
-                    <h3 id="submittedTableTitle" class="font-bold text-slate-800 text-lg">الطلبات المسجلة من جهازك (IP)</h3>
+                    <h3 class="font-bold text-slate-800 text-lg" id="tableSectionTitle">الطلبات المسجلة من جهازك (IP)</h3>
                     <span id="requestCountBadge" class="bg-ezdan-lightbg text-ezdan-red font-bold text-xs px-3 py-1 rounded-full">0 طلبات</span>
                 </div>
                 <div class="overflow-x-auto rounded-xl border border-slate-200">
-                    <table class="w-full text-sm text-right" id="submittedRequestsTableElement">
-                        <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-xs">
+                    <table class="w-full text-sm text-right" id="localRequestsTable">
+                        <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 text-xs" id="localTableHead">
                             <tr>
-                                <th class="p-3" id="thSubName">اسم العميل</th>
-                                <th class="p-3" id="thSubMobile">رقم الهاتف</th>
-                                <th class="p-3" id="thSubCategory">نوع الطلب</th>
-                                <th class="p-3" id="thSubZone">المنطقة</th>
-                                <th class="p-3" id="thSubIp">IP الجهاز</th>
-                                <th class="p-3 text-center" id="thSubAction">الإجراء</th>
+                                <th class="p-3" data-translate="thName">اسم العميل</th>
+                                <th class="p-3" data-translate="thMobile">رقم الهاتف</th>
+                                <th class="p-3" data-translate="thCategory">نوع الطلب</th>
+                                <th class="p-3" data-translate="thZone">المنطقة</th>
+                                <th class="p-3" data-translate="thIp">IP الجهاز</th>
+                                <th class="p-3 text-center" data-translate="thAction">الإجراء</th>
                             </tr>
                         </thead>
                         <tbody id="submittedRequestsBody" class="divide-y divide-slate-100">
                             <tr>
-                                <td colspan="6" class="text-center py-6 text-slate-400 italic" id="subEmptyText">لا توجد طلبات مسجلة حتى الآن.</td>
+                                <td colspan="6" class="text-center py-6 text-slate-400 italic" data-translate="noRequests">لا توجد طلبات مسجلة حتى الآن.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -231,14 +231,15 @@
                 </div>
                 <span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-bold flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                    <span id="excelLiveBadge">ربط مباشر بالأكسيل</span>
+                    <span id="liveExcelBadge">ربط مباشر بالأكسيل</span>
                 </span>
+
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-1" id="lblBankSearch">البحث السريع:</label>
-                    <input type="text" id="bankSearchInput" oninput="filterBankData()" placeholder="ابحث بالمنطقة، القرية، أو السعر..." class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-ezdan-red outline-none text-sm">
+                    <input type="text" id="bankSearchInput" oninput="filterBankData()" placeholder="ابحث بـ 1bhk، مشيرب، كهرماء، متاح..." class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-ezdan-red outline-none text-sm">
                 </div>
                 <div>
                     <label for="bankZoneSelect" class="block text-sm font-semibold text-slate-700 mb-1" id="lblBankZone">المنطقة / الموقع:</label>
@@ -280,22 +281,21 @@
         let currentUserIP = "جاري الكشف...";
         let currentLang = 'ar'; // اللغة الافتراضية
 
-        // قاموس الترجمة
+        // قاموس ترجمة العناوين والعناصر لمنع تداخل اللغات
         const translations = {
             ar: {
                 htmlLang: "ar",
                 dir: "rtl",
-                docTitle: "إزدان العقارية | نظام تسجيل البيانات وبنك المعلومات",
-                mainTitleText: 'إزدان العقارية <span class="text-ezdan-red text-sm font-semibold">| Ezdan Real Estate</span>',
-                mainSubtitleText: "نظام خدمة العملاء ومتابعة جودة الاتصالات وبنك الوحدات",
-                langBtnText: "English",
-                ipLabelText: "IP الجهاز:",
-                tabForm: "تسجيل بيانات العميل",
-                tabBank: "بنك المعلومات للوحدات",
+                langButtonText: "English",
+                mainHeaderTitle: 'إزدان العقارية <span class="text-ezdan-red text-sm font-semibold">| Ezdan Real Estate</span>',
+                mainHeaderSub: "نظام خدمة العملاء ومتابعة جودة الاتصالات وبنك الوحدات",
+                ipLabel: "IP الجهاز:",
+                tabFormBtn: "تسجيل بيانات العميل",
+                tabBankBtn: "بنك المعلومات للوحدات",
                 formHeading: "تسجيل بيانات العميل",
                 formSubheading: "يرجى تعبئة الحقول المطلوبة وتسجيل الطلب في السجل",
                 lblCustomerName: "إسم العميل",
-                customerNamePlaceholder: "أدخل اسم العميل",
+                custNamePlaceholder: "أدخل اسم العميل",
                 lblMobileNumber: "رقم الهاتف",
                 lblCategory: "نوع الطلب",
                 optSelectCategory: "اختر نوع الطلب...",
@@ -307,72 +307,71 @@
                 lblNotes: "ملاحظة",
                 notesPlaceholder: "أضف أي ملاحظات إضافية هنا...",
                 btnText: "إرسال البيانات (Submit)",
-                submittedTableTitle: "الطلبات المسجلة من جهازك (IP)",
-                thSubName: "اسم العميل",
-                thSubMobile: "رقم الهاتف",
-                thSubCategory: "نوع الطلب",
-                thSubZone: "المنطقة",
-                thSubIp: "IP الجهاز",
-                thSubAction: "الإجراء",
-                subEmptyText: "لا توجد طلبات مسجلة حتى الآن.",
+                tableSectionTitle: "الطلبات المسجلة من جهازك (IP)",
+                thName: "اسم العميل",
+                thMobile: "رقم الهاتف",
+                thCategory: "نوع الطلب",
+                thZone: "المنطقة",
+                thIp: "IP الجهاز",
+                thAction: "الإجراء",
                 deleteBtn: "حذف",
+                noRequests: "لا توجد طلبات مسجلة حتى الآن.",
                 bankHeading: "بنك المعلومات التفاعلي",
                 bankSubheading: "البحث السريع واستعراض تفاصيل أسعار وحالة توفر مجمعات إزدان",
-                excelLiveBadge: "ربط مباشر بالأكسيل",
+                liveExcelBadge: "ربط مباشر بالأكسيل",
                 lblBankSearch: "البحث السريع:",
-                searchPlaceholder: "ابحث بالمنطقة، القرية، أو السعر...",
+                searchPlaceholder: "ابحث بـ 1bhk، مشيرب، كهرماء، متاح...",
                 lblBankZone: "المنطقة / الموقع:",
                 optAllZones: "جميع المناطق",
                 lblBankCategory: "الفئة / نوع الوحدة:",
                 optAllCategories: "جميع الفئات",
                 bankPlaceholder: "جاري الاتصال بالأكسيل وجلب البيانات...",
-                successMsg: "تم تسجيل الطلب بنجاح ولن يختفي عند تحديث الصفحة!"
+                successAlert: "تم تسجيل الطلب بنجاح ولن يختفي عند تحديث الصفحة!"
             },
             en: {
                 htmlLang: "en",
                 dir: "ltr",
-                docTitle: "Ezdan Real Estate | Data Registration & Info Bank",
-                mainTitleText: 'Ezdan Real Estate <span class="text-ezdan-red text-sm font-semibold">| إزدان العقارية</span>',
-                mainSubtitleText: "Customer Service, Call Quality Monitoring & Units Info Bank",
-                langBtnText: "العربية",
-                ipLabelText: "Device IP:",
-                tabForm: "Customer Data Registration",
-                tabBank: "Units Information Bank",
+                langButtonText: "العربية",
+                mainHeaderTitle: 'Ezdan Real Estate <span class="text-ezdan-red text-sm font-semibold">| إزدان العقارية</span>',
+                mainHeaderSub: "Customer Service, Call Quality Monitoring & Units Info Bank",
+                ipLabel: "Device IP:",
+                tabFormBtn: "Customer Data Registration",
+                tabBankBtn: "Units Information Bank",
                 formHeading: "Customer Data Registration",
-                formSubheading: "Please fill in the required fields and submit the request to the ledger",
+                formSubheading: "Please fill in the required fields and submit the request to the log",
                 lblCustomerName: "Customer Name",
-                customerNamePlaceholder: "Enter customer name",
+                custNamePlaceholder: "Enter customer name",
                 lblMobileNumber: "Mobile Number",
-                lblCategory: "Request Type",
-                optSelectCategory: "Select request type...",
+                lblCategory: "Request Category",
+                optSelectCategory: "Select request category...",
                 lblZone: "Zone",
                 optSelectZone: "Select zone...",
                 lblNumOfUnits: "Number of Units",
                 lblSalesOrigin: "Sales Origin",
-                optSelectOrigin: "Select ad source...",
+                optSelectOrigin: "Select sales origin...",
                 lblNotes: "Notes",
-                notesPlaceholder: "Add any extra notes here...",
+                notesPlaceholder: "Add any additional notes here...",
                 btnText: "Submit Data",
-                submittedTableTitle: "Submitted Requests from Your Device (IP)",
-                thSubName: "Customer Name",
-                thSubMobile: "Mobile Number",
-                thSubCategory: "Request Type",
-                thSubZone: "Zone",
-                thSubIp: "Device IP",
-                thSubAction: "Action",
-                subEmptyText: "No requests recorded yet.",
+                tableSectionTitle: "Requests Logged from Your Device (IP)",
+                thName: "Customer Name",
+                thMobile: "Mobile Number",
+                thCategory: "Category",
+                thZone: "Zone",
+                thIp: "Device IP",
+                thAction: "Action",
                 deleteBtn: "Delete",
+                noRequests: "No requests logged yet.",
                 bankHeading: "Interactive Information Bank",
                 bankSubheading: "Quick search and details on Ezdan complexes prices and availability",
-                excelLiveBadge: "Live Excel Connection",
+                liveExcelBadge: "Live Excel Connection",
                 lblBankSearch: "Quick Search:",
-                searchPlaceholder: "Search by zone, village, or price...",
+                searchPlaceholder: "Search 1bhk, Msheireb, kahrama, available...",
                 lblBankZone: "Zone / Location:",
                 optAllZones: "All Zones",
                 lblBankCategory: "Category / Unit Type:",
                 optAllCategories: "All Categories",
                 bankPlaceholder: "Connecting to Excel and fetching data...",
-                successMsg: "Request successfully recorded and saved!"
+                successAlert: "Request successfully recorded and saved!"
             }
         };
 
@@ -382,53 +381,55 @@
             loadSubmittedRequests();
         });
 
-        function switchTab(tabName) {
+        // تبديل التبويبات (Form / Bank)
+        function switchTab(tab) {
+            const formBtn = document.getElementById('tabFormBtn');
+            const bankBtn = document.getElementById('tabBankBtn');
             const formPanel = document.getElementById('formPanel');
             const bankPanel = document.getElementById('bankPanel');
-            const tabFormBtn = document.getElementById('tabFormBtn');
-            const tabBankBtn = document.getElementById('tabBankBtn');
 
-            if (tabName === 'form') {
+            if (tab === 'form') {
+                formBtn.className = "flex-1 py-3 rounded-lg text-sm font-bold transition bg-ezdan-red text-white shadow";
+                bankBtn.className = "flex-1 py-3 rounded-lg text-sm font-bold transition text-slate-600 hover:bg-slate-100";
                 formPanel.classList.remove('hidden');
                 bankPanel.classList.add('hidden');
-                tabFormBtn.className = "flex-1 py-3 rounded-lg text-sm font-bold transition bg-ezdan-red text-white shadow";
-                tabBankBtn.className = "flex-1 py-3 rounded-lg text-sm font-bold transition text-slate-600 hover:bg-slate-100";
             } else {
-                formPanel.classList.add('hidden');
+                bankBtn.className = "flex-1 py-3 rounded-lg text-sm font-bold transition bg-ezdan-red text-white shadow";
+                formBtn.className = "flex-1 py-3 rounded-lg text-sm font-bold transition text-slate-600 hover:bg-slate-100";
                 bankPanel.classList.remove('hidden');
-                tabBankBtn.className = "flex-1 py-3 rounded-lg text-sm font-bold transition bg-ezdan-red text-white shadow";
-                tabFormBtn.className = "flex-1 py-3 rounded-lg text-sm font-bold transition text-slate-600 hover:bg-slate-100";
+                formPanel.classList.add('hidden');
             }
         }
 
+        // تبديل اللغة
         function toggleLanguage() {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             applyLanguage();
+            renderTableHeader();
+            initBankDropdowns();
+            filterBankData();
+            loadSubmittedRequests();
         }
 
         function applyLanguage() {
             const t = translations[currentLang];
-            const htmlTag = document.getElementById('htmlTag');
-            htmlTag.setAttribute('lang', t.htmlLang);
-            htmlTag.setAttribute('dir', t.dir);
+            document.getElementById('htmlTag').setAttribute('lang', t.htmlLang);
+            document.getElementById('htmlTag').setAttribute('dir', t.dir);
+            document.body.className = `ezdan-watermark min-h-screen py-4 px-2 sm:px-4 md:px-6 flex justify-center text-slate-800 ${t.dir === 'ltr' ? 'text-left' : 'text-right'}`;
 
-            document.getElementById('docTitle').textContent = t.docTitle;
-            document.getElementById('mainTitle').innerHTML = t.mainTitleText;
-            document.getElementById('mainSubtitle').textContent = t.mainSubtitleText;
-            document.getElementById('langBtnText').textContent = t.langBtnText;
-            document.getElementById('ipLabel').textContent = t.ipLabelText;
-
-            document.getElementById('tabFormBtn').textContent = t.tabForm;
-            document.getElementById('tabBankBtn').textContent = t.tabBank;
-
+            document.getElementById('langButtonText').textContent = t.langButtonText;
+            document.getElementById('mainHeaderTitle').innerHTML = t.mainHeaderTitle;
+            document.getElementById('mainHeaderSub').textContent = t.mainHeaderSub;
+            document.getElementById('ipLabel').textContent = t.ipLabel;
+            document.getElementById('tabFormBtn').textContent = t.tabFormBtn;
+            document.getElementById('tabBankBtn').textContent = t.tabBankBtn;
             document.getElementById('formHeading').textContent = t.formHeading;
             document.getElementById('formSubheading').textContent = t.formSubheading;
             document.getElementById('lblCustomerName').textContent = t.lblCustomerName;
-            document.getElementById('customerName').placeholder = t.customerNamePlaceholder;
+            document.getElementById('customerName').placeholder = t.custNamePlaceholder;
             document.getElementById('lblMobileNumber').textContent = t.lblMobileNumber;
             document.getElementById('lblCategory').textContent = t.lblCategory;
             document.getElementById('optSelectCategory').textContent = t.optSelectCategory;
-
             document.getElementById('lblZone').textContent = t.lblZone;
             document.getElementById('optSelectZone').textContent = t.optSelectZone;
             document.getElementById('lblNumOfUnits').textContent = t.lblNumOfUnits;
@@ -437,29 +438,19 @@
             document.getElementById('lblNotes').textContent = t.lblNotes;
             document.getElementById('notes').placeholder = t.notesPlaceholder;
             document.getElementById('btnText').textContent = t.btnText;
-
-            document.getElementById('submittedTableTitle').textContent = t.submittedTableTitle;
-            document.getElementById('thSubName').textContent = t.thSubName;
-            document.getElementById('thSubMobile').textContent = t.thSubMobile;
-            document.getElementById('thSubCategory').textContent = t.thSubCategory;
-            document.getElementById('thSubZone').textContent = t.thSubZone;
-            document.getElementById('thSubIp').textContent = t.thSubIp;
-            document.getElementById('thSubAction').textContent = t.thSubAction;
-
+            document.getElementById('tableSectionTitle').textContent = t.tableSectionTitle;
             document.getElementById('bankHeading').textContent = t.bankHeading;
             document.getElementById('bankSubheading').textContent = t.bankSubheading;
-            document.getElementById('excelLiveBadge').textContent = t.excelLiveBadge;
+            document.getElementById('liveExcelBadge').textContent = t.liveExcelBadge;
             document.getElementById('lblBankSearch').textContent = t.lblBankSearch;
             document.getElementById('bankSearchInput').placeholder = t.searchPlaceholder;
             document.getElementById('lblBankZone').textContent = t.lblBankZone;
             document.getElementById('optAllZones').textContent = t.optAllZones;
             document.getElementById('lblBankCategory').textContent = t.lblBankCategory;
             document.getElementById('optAllCategories').textContent = t.optAllCategories;
-
-            loadSubmittedRequests();
-            if(bankData.length > 0) filterBankData();
         }
 
+        // جلب الـ IP الحقيقي للمستخدم
         function fetchUserIP() {
             fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
@@ -474,6 +465,7 @@
                 });
         }
 
+        // التعامل مع إرسال الطلب وحفظه في الـ localStorage
         function handleSubmit(event) {
             event.preventDefault();
 
@@ -495,18 +487,19 @@
 
             document.getElementById('agentForm').reset();
             loadSubmittedRequests();
-            alert(translations[currentLang].successMsg);
+            alert(translations[currentLang].successAlert);
         }
 
+        // تحميل وعرض الطلبات المسجلة أسفل النموذج
         function loadSubmittedRequests() {
             const tbody = document.getElementById('submittedRequestsBody');
             const requests = JSON.parse(localStorage.getItem('ezdan_requests')) || [];
             const t = translations[currentLang];
             
-            document.getElementById('requestCountBadge').textContent = `${requests.length} ${currentLang === 'ar' ? 'طلبات' : 'requests'}`;
+            document.getElementById('requestCountBadge').textContent = currentLang === 'ar' ? `${requests.length} طلبات` : `${requests.length} requests`;
 
             if (requests.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400 italic">${t.subEmptyText}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400 italic">${t.noRequests}</td></tr>`;
                 return;
             }
 
@@ -535,6 +528,7 @@
             loadSubmittedRequests();
         }
 
+        // الدوال الخاصة ببنك المعلومات وجلب الأكسيل
         function fetchExcelData() {
             Papa.parse(DIRECT_CSV_URL, {
                 download: true,
@@ -548,72 +542,74 @@
                         initBankDropdowns();
                         filterBankData();
                     } else {
-                        document.getElementById('bankPlaceholder').innerHTML = `
-                            <span class="text-amber-600 block mb-1 font-bold">⚠️ تم الاتصال بالشيت لكن لم تُقرأ أية بيانات.</span>
+                        document.getElementById('bankTableBody').innerHTML = `
+                            <tr><td colspan="100" class="text-center py-8 text-amber-600 font-bold">⚠️ تم الاتصال بالشيت لكن لم تُقرأ أية بيانات.</td></tr>
                         `;
                     }
                 },
                 error: function(err) {
                     console.error("Error loading CSV:", err);
-                    document.getElementById('bankPlaceholder').innerHTML = `
-                        <span class="text-red-600 block mb-1 font-bold">❌ فشل تحميل الملف</span>
+                    document.getElementById('bankTableBody').innerHTML = `
+                        <tr><td colspan="100" class="text-center py-8 text-red-600 font-bold">❌ فشل تحميل الملف</td></tr>
                     `;
                 }
             });
         }
 
-        // إكمال دالة renderTableHeader وتصحيحها بناءً على الأعمدة الواردة من شيت أكسيل
         function renderTableHeader() {
-            const headerElement = document.getElementById('bankTableHeader');
-            if (!headersList || headersList.length === 0) return;
+            const thead = document.getElementById('bankTableHeader');
+            if (headersList.length === 0) return;
 
             let html = '<tr>';
-            headersList.forEach(header => {
-                html += `<th class="p-3">${header}</th>`;
+            headersList.forEach(h => {
+                html += `<th class="p-3.5 whitespace-nowrap">${h}</th>`;
             });
             html += '</tr>';
-            headerElement.innerHTML = html;
+            thead.innerHTML = html;
         }
 
         function initBankDropdowns() {
-            const zoneSelect = document.getElementById('bankZoneSelect');
-            const categorySelect = document.getElementById('bankCategorySelect');
+            if (headersList.length === 0) return;
 
-            let zones = new Set();
-            let categories = new Set();
+            // تخمين أعمدة المنطقة والفئة بناءً على الأسماء الشائعة أو ترتيب الأعمدة
+            let zoneCol = headersList.find(h => h.includes('المنطقة') || h.toLowerCase().includes('zone') || h.includes('الموقع') || h.includes('المجمع')) || headersList[0];
+            let catCol = headersList.find(h => h.includes('الفئة') || h.toLowerCase().includes('category') || h.toLowerCase().includes('type') || h.includes('الوحدة')) || headersList[1];
 
-            bankData.forEach(row => {
-                // افتراض أسماء الأعمدة الشائعة في الشيت (مثل المنطقة والفئة أو أول عمودين إذا اختلفت الأسماء)
-                const values = Object.values(row);
-                if (values[0]) zones.add(values[0]);
-                if (values[1]) categories.add(values[1]);
-            });
+            let zones = [...new Set(bankData.map(row => row[zoneCol]).filter(Boolean))];
+            let categories = [...new Set(bankData.map(row => row[catCol]).filter(Boolean))];
 
-            let zoneHtml = `<option value="" id="optAllZones">${translations[currentLang].optAllZones}</option>`;
-            zones.forEach(zone => {
-                zoneHtml += `<option value="${zone}">${zone}</option>`;
+            let zoneSelect = document.getElementById('bankZoneSelect');
+            let catSelect = document.getElementById('bankCategorySelect');
+
+            let allZonesText = currentLang === 'ar' ? 'جميع المناطق' : 'All Zones';
+            let allCatsText = currentLang === 'ar' ? 'جميع الفئات' : 'All Categories';
+
+            let zoneHtml = `<option value="">${allZonesText}</option>`;
+            zones.forEach(z => {
+                zoneHtml += `<option value="${z}">${z}</option>`;
             });
             zoneSelect.innerHTML = zoneHtml;
 
-            let catHtml = `<option value="" id="optAllCategories">${translations[currentLang].optAllCategories}</option>`;
-            categories.forEach(cat => {
-                catHtml += `<option value="${cat}">${cat}</option>`;
+            let catHtml = `<option value="">${allCatsText}</option>`;
+            categories.forEach(c => {
+                catHtml += `<option value="${c}">${c}</option>`;
             });
-            categorySelect.innerHTML = catHtml;
+            catSelect.innerHTML = catHtml;
         }
 
         function filterBankData() {
-            const searchText = document.getElementById('bankSearchInput').value.toLowerCase();
+            const searchInput = document.getElementById('bankSearchInput').value.toLowerCase();
             const selectedZone = document.getElementById('bankZoneSelect').value;
             const selectedCategory = document.getElementById('bankCategorySelect').value;
 
-            const filtered = bankData.filter(row => {
-                const rowValues = Object.values(row);
-                const matchesSearch = rowValues.some(val => String(val).toLowerCase().includes(searchText));
-                const matchesZone = !selectedZone || String(rowValues[0]) === selectedZone;
-                const matchesCategory = !selectedCategory || String(rowValues[1]) === selectedCategory;
+            let zoneCol = headersList.find(h => h.includes('المنطقة') || h.toLowerCase().includes('zone') || h.includes('الموقع') || h.includes('المجمع')) || headersList[0];
+            let catCol = headersList.find(h => h.includes('الفئة') || h.toLowerCase().includes('category') || h.toLowerCase().includes('type') || h.toLowerCase().includes('unit')) || headersList[1];
 
-                return matchesSearch && matchesZone && matchesCategory;
+            let filtered = bankData.filter(row => {
+                let matchesSearch = Object.values(row).some(val => String(val).toLowerCase().includes(searchInput));
+                let matchesZone = !selectedZone || row[zoneCol] === selectedZone;
+                let matchesCat = !selectedCategory || row[catCol] === selectedCategory;
+                return matchesSearch && matchesZone && matchesCat;
             });
 
             renderBankTable(filtered);
@@ -621,27 +617,45 @@
 
         function renderBankTable(data) {
             const tbody = document.getElementById('bankTableBody');
+            const noDataText = currentLang === 'ar' ? 'لا توجد نتائج مطابقة للبحث' : 'No matching results found';
+
             if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${headersList.length || 7}" class="text-center py-6 text-slate-400 italic">لا توجد بيانات مطابقة للبحث.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${headersList.length}" class="text-center py-8 text-slate-400 font-semibold">${noDataText}</td></tr>`;
                 return;
             }
 
             let html = '';
-            data.forEach(row => {
+            data.forEach((row, index) => {
                 html += `<tr class="hover:bg-slate-50 transition border-b border-slate-100">`;
                 
-                Object.entries(row).forEach(([key, val]) => {
-                    let cellValue = val !== undefined && val !== null ? val : '';
-                    let strVal = String(cellValue).trim().toLowerCase();
-                    
-                    // التحقق مما إذا كانت الحالة غير متوفرة لتلوين الخلية باللون الأحمر
-                    let isNotAvailable = strVal === 'not available' || strVal === 'غير متوفرة' || strVal === 'غير متوفر';
-                    
-                    if (isNotAvailable) {
-                        html += `<td class="p-3 font-bold text-red-600">${cellValue}</td>`;
-                    } else {
-                        html += `<td class="p-3 text-slate-700">${cellValue}</td>`;
+                headersList.forEach(header => {
+                    let cellVal = row[header] !== undefined && row[header] !== null ? row[header] : '';
+                    let lowerVal = String(cellVal).trim().toLowerCase();
+                    let headerLower = header.trim().toLowerCase();
+
+                    let cellStyle = "p-3.5 whitespace-nowrap text-slate-700";
+
+                    // 1. تلوين غير المتاحة بالأحمر (Not available / غير متاح / booked / occupied / reserved)
+                    if (lowerVal === 'not available' || lowerVal === 'غير متاح' || lowerVal === 'booked' || lowerVal === 'مشغول' || lowerVal === 'محجوز' || lowerVal === 'reserved') {
+                        cellVal = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">${cellVal}</span>`;
                     }
+                    // 2. تلوين المتوفرة بالأخضر أو سعر الوحدات المتوفرة بالأخضر
+                    else if (lowerVal === 'available' || lowerVal === 'متاح' || lowerVal === 'vacant') {
+                        cellVal = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">${cellVal}</span>`;
+                    }
+                    // تلوين أسعار الوحدات المتوفرة بالأخضر (أو الأعمدة التي تحتوي على كلمة سعر أو price)
+                    else if (headerLower.includes('سعر') || headerLower.includes('price') || headerLower.includes('cost') || headerLower.includes('value')) {
+                        // التحقق مما إذا كانت الوحدة متوفرة (بالبحث في نفس الصف عن كلمة متاح أو available)
+                        let isAvailableRow = Object.values(row).some(v => {
+                            let s = String(v).trim().toLowerCase();
+                            return s === 'available' || s === 'متاح' || s === 'vacant';
+                        });
+                        if (isAvailableRow && cellVal !== '') {
+                            cellStyle += " font-bold text-emerald-600";
+                        }
+                    }
+
+                    html += `<td class="${cellStyle}">${cellVal}</td>`;
                 });
 
                 html += `</tr>`;
