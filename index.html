@@ -26,18 +26,23 @@
             }
         }
     </script>
-    <style>
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            background-color: #FBF0F2;
-        }
-        .ezdan-watermark {
-            background-image: linear-gradient(rgba(251, 240, 242, 0.92), rgba(251, 240, 242, 0.92)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><path fill="%23C8102E" d="M90,200 L210,50 L210,200 Z"/><path fill="%238A8D8F" d="M215,70 L330,135 L330,200 L215,200 Z"/><rect fill="%23FFFFFF" x="127" y="140" width="42" height="60"/><rect fill="%23FFFFFF" x="255" y="165" width="28" height="35"/><path fill="%23C8102E" d="M70,225 L135,225 L135,280 L80,280 L130,340 L70,340 L70,225 Z"/><path fill="%238A8D8F" d="M140,225 L330,225 L330,340 L275,340 L275,260 L200,340 L140,340 L140,225 Z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: center 35%;
-            background-size: 380px;
-        }
-    </style>
+<style>
+    /* تقليل المسافات الافتراضية داخل خلايا الجدول وجعل الخط غليظاً */
+    #bankTable td, #bankTable th {
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        font-weight: 600 !important; /* خط سميك واضح */
+    }
+    
+    /* تقليل المسافات في جدول الطلبات المحلية أيضاً */
+    #localRequestsTable td, #localRequestsTable th {
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+        font-weight: 600 !important;
+    }
+</style>
 </head>
 <body class="ezdan-watermark min-h-screen py-4 px-2 sm:px-4 md:px-6 flex justify-center text-slate-800">
 
